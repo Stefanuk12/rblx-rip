@@ -1,6 +1,6 @@
 {
   "name": "rblx-rip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An open-source roblox ripping tool",
   "main": "lib/index.js",
   "types": "index.d.ts",
@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "tsc": "tsc -p ."
+    "build": "tsc -p ."
   },
   "repository": {
     "type": "git",
