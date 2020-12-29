@@ -1,31 +1,26 @@
 {
-  "name": "rblx-shirtrip",
-  "version": "1.0.2",
-  "description": "roblox asset ripper",
-  "main": "index.js",
+  "name": "rblx-rip",
+  "version": "1.0.0",
+  "description": "An open-source roblox ripping tool",
+  "main": "lib/index.js",
+  "types": "index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc -p ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zyme-xd/rblx-shirtrip.git"
+    "url": "git+https://github.com/Stefanuk12/rblx-rip.git"
   },
-  "keywords": [
-    "roblox",
-    "asset",
-    "ripping",
-    "nodefetch"
-  ],
-  "author": "zyrn (https://zyrn.wtf)",
-  "license": "ISC",
+  "author": "Stefanuk12",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zyme-xd/rblx-shirtrip/issues"
+    "url": "https://github.com/Stefanuk12/rblx-rip/issues"
   },
-  "homepage": "https://github.com/zyme-xd/rblx-shirtrip#readme",
+  "homepage": "https://github.com/Stefanuk12/rblx-rip#readme",
   "dependencies": {
-    "node-fetch": "^2.6.1",
-    "pkg": "^4.4.9",
-    "readline-promise": "^1.0.5"
-  },
-  "devDependencies": {}
+    "got": "^11.8.1"
+  }
 }
