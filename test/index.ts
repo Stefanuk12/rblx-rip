@@ -1,10 +1,15 @@
 // Requirements
-import { RRip } from "../src/index"
+import { RRip } from "../src/index";
+
+// Config
+const config = require('./config.json');
 
 // Test
 const _RRip = new RRip();
 
 // Downloading an audio
 (async () => {
-    _RRip.audio(639750143);
+    for (var [key, value] of Object.entries(config)){
+        eval(`_RRip.${key}(${value})`);
+    }
 })();
