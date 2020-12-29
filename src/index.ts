@@ -10,7 +10,9 @@ export class RRip {
     // Vars
     static outDir: string;
     private static HttpClient: Got;
+    private cookie: string;
     static download: Function;
+    xcsrftoken: string = "";
     pipeline: any = promisify(stream.pipeline);
     
     // Create a directory
@@ -25,8 +27,9 @@ export class RRip {
     }
 
     // Constructor
-    constructor(outDir: string = "./assets"){
+    constructor(outDir: string = "./assets", cookie: string = ""){
         RRip.outDir = outDir;
+        this.cookie = cookie;
 
         // Making the export directory
         this.createDir(outDir);
@@ -35,7 +38,7 @@ export class RRip {
         for (var [key, value] of Object.entries(config)){
             this.createDir(`${outDir}/${key}`);
         }
-
+        
         // HTTP Client
         RRip.HttpClient = got.extend({
             prefixUrl: "https://assetdelivery.roblox.com/v1",
@@ -43,6 +46,28 @@ export class RRip {
                 "User-Agent": "Roblox/WinInet"
             }
         });
+
+        // Authentication
+        this.authentication(cookie);
+    }
+
+    // Authentication
+    async authentication(cookie: string){
+        try {
+            // Get response
+            const response = await got.post("https://auth.roblox.com/v2/logout", {
+                headers: {
+                    cookie: ".ROBLOSECURITY=" + cookie
+                },
+                throwHttpErrors: false
+            });
+
+            if (response.headers["x-csrf-token"]){
+                this.xcsrftoken = response.headers["x-csrf-token"].toString();
+            }
+        } catch(error) {
+            throw(new Error("Unable to get CSRF Token, more in-depth details: " + error));
+        }
     }
 
     // Get directory
@@ -185,7 +210,7 @@ export class RRip {
 
         // Downloading and writing
         await this.pipeline(
-            RRip.HttpClient.stream("asset", {searchParams: {id: newId}}), // Get the file
+            RRip.HttpClient.stream("asset", {searchParams: {id: newId}}), // Get the file - 404 here
             fs.createWriteStream(`${directory}/${id}.obj`) // Write it
         )
     }
@@ -197,7 +222,7 @@ export class RRip {
         this.createDir(directory);
         
         await this.pipeline(
-            RRip.HttpClient.stream("asset", {searchParams: {id: id}}), // Get the file
+            RRip.HttpClient.stream("asset", {searchParams: {id: id}, headers: {"x-csrf-token": this.xcsrftoken}}), // Get the file
             fs.createWriteStream(`${directory}/${id}.rbxm`) // Write it
         )
     }
@@ -262,7 +287,7 @@ export class RRip {
                 
         // Pipeline
         await this.pipeline(
-            RRip.HttpClient.stream("asset", {searchParams: {id: id}}), // Get the file
+            RRip.HttpClient.stream("asset", {searchParams: {id: id}, headers: {"x-csrf-token": this.xcsrftoken}}), // Get the file
             fs.createWriteStream(`${directory}/${id}.rbxl`) // Write it
         )
     }
@@ -343,8 +368,8 @@ export class RRip {
     }
 
     // Test if everything is working
-    async test(){
-        const _RRip = new RRip();
+    async test(outDir: string = "./assets", cookie: string = ""){
+        const _RRip = new RRip(RRip.outDir, this.cookie);
         for (var [key, value] of Object.entries(config)){           
             eval(`if (_RRip.${key} != undefined) {_RRip.${key}(${value})}`);
         }

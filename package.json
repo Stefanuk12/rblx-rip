@@ -1,6 +1,6 @@
 {
   "name": "rblx-rip",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "An open-source roblox ripping tool",
   "main": "lib/index.js",
   "types": "index.d.ts",
